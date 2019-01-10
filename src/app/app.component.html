@@ -6,6 +6,8 @@
       <ul class="nav navbar-nav">
         <li routerLinkActive="active"><a routerLink="auth">Authentification</a></li>
         <li routerLinkActive="active"><a routerLink="appareils">Appareils</a></li>
+        <li routerLinkActive="active"><a routerLink="edit">Nouvel appareil</a></li>
+        <li routerLinkActive="active"><a routerLink="users">Utilisateurs</a></li>
       </ul>
       <div class="navbar-right">
         <p>Vous êtes connecté dépuis {{ secondes }}</p>
@@ -15,6 +17,7 @@
 </nav>
 <div class="row">
   <div class="col-xs-12">
+    <!--Balise correspondant à la zone d'apparaition des components lié à un routerLink: lien entre le component parent et les component enfant via leurs routes dans app.module.ts-->
     <router-outlet></router-outlet>
   </div>
 </div>

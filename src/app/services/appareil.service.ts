@@ -1,47 +1,52 @@
-import {Subject} from 'rxjs/Subject';
+import { Subject } from 'rxjs/Subject';
 
-export class AppareilService{
+export class AppareilService {
   appareilsSubject = new Subject<any[]>();
 
-   private appareils = [
-        {
-          id: 1,
-          name: 'Machine à laver',
-          status: 'éteint'
-        },
-        {
-          id: 2,
-          name: 'Frigo',
-          status: 'allumé'
-        },
-        {
-          id: 3,
-          name: 'Ordinateur',
-          status: 'en veille'
-        }
-      ];
-
-      emitAppareilSubject(){
-        this.appareilsSubject.next(this.appareils.slice());
-      }
-
-      switchOnAll() { //modifie le status de tous les appareils =>allumé
-        for(let appareil of this.appareils) {
-          appareil.status = 'allumé';
-        }
+  private appareils = [
+    {
+      id: 1,
+      name: 'Machine à laver',
+      status: 'éteint'
+    },
+    {
+      id: 2,
+      name: 'Frigo',
+      status: 'allumé'
+    },
+    {
+      id: 3,
+      name: 'Ordinateur',
+      status: 'en veille'
     }
-    
-    switchOffAll() {
-        for(let appareil of this.appareils) { //modifie le status de tous les appareils =>éteint
-          appareil.status = 'éteint';
-        }
-    }
-    switchOnOne(i: number) { //modifie le status d'un appareil en fonction de son indexe =>allumé
-      this.appareils[i].status = 'allumé';
+  ];
+
+  emitAppareilSubject() {
+    this.appareilsSubject.next(this.appareils.slice()); //mis à jour des données de l'objet
   }
-  
+
+  switchOnAll() { //modifie le status de tous les appareils =>allumé
+    for (let appareil of this.appareils) {
+      appareil.status = 'allumé';
+    }
+    this.emitAppareilSubject();
+  }
+
+  switchOffAll() {
+    for (let appareil of this.appareils) { //modifie le status de tous les appareils =>éteint
+      appareil.status = 'éteint';
+    }
+    this.emitAppareilSubject();
+  }
+
+  switchOnOne(i: number) { //modifie le status d'un appareil en fonction de son indexe =>allumé
+    this.appareils[i].status = 'allumé';
+    this.emitAppareilSubject();
+  }
+
   switchOffOne(i: number) { //modifie le status d'un appareil en fonction de son indexe =>éteint
-      this.appareils[i].status = 'éteint';
+    this.appareils[i].status = 'éteint';
+    this.emitAppareilSubject();
   }
 
   getAppareilById(id: number) { //récupère l'appareil à partir de son id
@@ -51,5 +56,19 @@ export class AppareilService{
       }
     );
     return appareil;
-}
+  }
+
+  addAppareil(name: string, status: string) {
+    const appareilObject = {
+      id: 0,
+      name: '',
+      status: ''
+    }
+
+    appareilObject.name = name;
+    appareilObject.status = status;
+    appareilObject.id = this.appareils[(this.appareils.length -1)].id + 1; //Récupère l'id du derniner élément (index=this.appareils.length -1) et on ajoute 1. On écrémente de 1 le dernier id
+    this.appareils.push(appareilObject);
+    this.emitAppareilSubject;
+  }
 }
