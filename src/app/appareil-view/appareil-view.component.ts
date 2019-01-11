@@ -11,7 +11,6 @@ export class AppareilViewComponent implements OnInit, OnDestroy {
 
   appareils: any[];
   appareilSubscription: Subscription;
-  //isAuth = false;
 
   lastUpdate = new Promise((resolve, reject) => {
     const date = new Date();
@@ -52,6 +51,13 @@ export class AppareilViewComponent implements OnInit, OnDestroy {
       return null;
     }
   }
+
+  onSave(){
+    this.appareilService.saveAppareilsToServer();
+  }
+  onFetch() {
+    this.appareilService.getAppareilsFromServer();
+}
 
   ngOnDestroy(){
   this.appareilSubscription.unsubscribe();

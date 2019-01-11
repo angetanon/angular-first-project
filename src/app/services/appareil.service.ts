@@ -1,5 +1,8 @@
 import { Subject } from 'rxjs/Subject';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http'
 
+@Injectable()
 export class AppareilService {
   appareilsSubject = new Subject<any[]>();
 
@@ -20,6 +23,8 @@ export class AppareilService {
       status: 'en veille'
     }
   ];
+
+  constructor(private httpClient: HttpClient) { }
 
   emitAppareilSubject() {
     this.appareilsSubject.next(this.appareils.slice()); //mis à jour des données de l'objet
@@ -67,8 +72,37 @@ export class AppareilService {
 
     appareilObject.name = name;
     appareilObject.status = status;
-    appareilObject.id = this.appareils[(this.appareils.length -1)].id + 1; //Récupère l'id du derniner élément (index=this.appareils.length -1) et on ajoute 1. On écrémente de 1 le dernier id
+    console.log(appareilObject);
+    appareilObject.id = this.appareils[(this.appareils.length - 1)].id + 1; //Récupère l'id du derniner élément (index=this.appareils.length -1) et on ajoute 1. On écrémente de 1 le dernier id
     this.appareils.push(appareilObject);
-    this.emitAppareilSubject;
+    this.emitAppareilSubject();
+    console.log('objet apres misa à jour' + appareilObject);
+
+  }
+
+  saveAppareilsToServer() {
+    this.httpClient
+      .post('https://httpclient-demo-a2a00.firebaseio.com/appareils.json', this.appareils)
+      .subscribe(
+        () => {
+          console.log('Enregistrement terminé !');
+        },
+        (error) => {
+          console.log('Erreur ! : ' + error);
+        }
+      );
+  }
+  getAppareilsFromServer() {
+    this.httpClient
+      .get<any[]>('https://httpclient-demo-a2a00.firebaseio.com/appareils.json')
+      .subscribe(
+        (response) => {
+          this.appareils = response;
+          //this.emitAppareilSubject();
+        },
+        (error) => {
+          console.log('Erreur ! : ' + error);
+        }
+      );
   }
 }
