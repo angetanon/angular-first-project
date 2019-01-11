@@ -72,12 +72,9 @@ export class AppareilService {
 
     appareilObject.name = name;
     appareilObject.status = status;
-    console.log(appareilObject);
     appareilObject.id = this.appareils[(this.appareils.length - 1)].id + 1; //Récupère l'id du derniner élément (index=this.appareils.length -1) et on ajoute 1. On écrémente de 1 le dernier id
     this.appareils.push(appareilObject);
     this.emitAppareilSubject();
-    console.log('objet apres misa à jour' + appareilObject);
-
   }
 
   saveAppareilsToServer() {
@@ -98,7 +95,7 @@ export class AppareilService {
       .subscribe(
         (response) => {
           this.appareils = response;
-          //this.emitAppareilSubject();
+          this.emitAppareilSubject();
         },
         (error) => {
           console.log('Erreur ! : ' + error);
