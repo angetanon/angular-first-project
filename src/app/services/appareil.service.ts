@@ -6,23 +6,7 @@ import { HttpClient } from '@angular/common/http'
 export class AppareilService {
   appareilsSubject = new Subject<any[]>();
 
-  private appareils = [
-    {
-      id: 1,
-      name: 'Machine à laver',
-      status: 'éteint'
-    },
-    {
-      id: 2,
-      name: 'Frigo',
-      status: 'allumé'
-    },
-    {
-      id: 3,
-      name: 'Ordinateur',
-      status: 'en veille'
-    }
-  ];
+  private appareils = [];
 
   constructor(private httpClient: HttpClient) { }
 
@@ -72,14 +56,18 @@ export class AppareilService {
 
     appareilObject.name = name;
     appareilObject.status = status;
-    appareilObject.id = this.appareils[(this.appareils.length - 1)].id + 1; //Récupère l'id du derniner élément (index=this.appareils.length -1) et on ajoute 1. On écrémente de 1 le dernier id
+    if (this.appareils.length > 0) {
+      appareilObject.id = this.appareils[(this.appareils.length - 1)].id + 1; //Récupère l'id du derniner élément (index=this.appareils.length -1) et on ajoute 1. On écrémente de 1 le dernier id
+    } else{
+      appareilObject.id = 0
+    }
     this.appareils.push(appareilObject);
     this.emitAppareilSubject();
   }
 
-  saveAppareilsToServer() {
+  updateAppareil() {
     this.httpClient
-      .post('https://httpclient-demo-a2a00.firebaseio.com/appareils.json', this.appareils)
+      .put('https://http-client-demo-ange.firebaseio.com/appareils.json', this.appareils)
       .subscribe(
         () => {
           console.log('Enregistrement terminé !');
@@ -89,9 +77,31 @@ export class AppareilService {
         }
       );
   }
+
+  createAppareil() {
+    this.httpClient
+      .post('https://http-client-demo-ange.firebaseio.com/appareils.json', this.appareils)
+      .subscribe(
+        () => {
+          console.log('Enregistrement terminé !');
+        },
+        (error) => {
+          console.log('Erreur ! : ' + error);
+        }
+      );
+  }
+
+  saveAppareilsToServer() {
+    if (this.appareils == []) {
+      this.createAppareil();
+    } else {
+      this.updateAppareil();
+    }
+  }
+
   getAppareilsFromServer() {
     this.httpClient
-      .get<any[]>('https://httpclient-demo-a2a00.firebaseio.com/appareils.json')
+      .get<any[]>('https://http-client-demo-ange.firebaseio.com/appareils.json')
       .subscribe(
         (response) => {
           this.appareils = response;
