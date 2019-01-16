@@ -19,13 +19,13 @@ export class NewUserComponent implements OnInit {
     this.initForm();
   }
 
-  initForm() {
+  initForm() {  //créer un user de type formGroup via la méthode formBuilder.group({}): permettant de définir les valeurs des champs avec une valeur par défaut, et des champs réquis ou un pattern
     this.userForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       drinkPreference: ['', Validators.required],
-      hobbies: this.formBuilder.array([])
+      hobbies: this.formBuilder.array([]) // définir un tableau vide par défaut
     });
   }
 
